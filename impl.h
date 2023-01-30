@@ -1,3 +1,5 @@
+#include <curses.h>
+
 #define MEMSZ 0x1000 /* memory size */
 #define SCRSZ 0x100  /* screen size */
 #define SCRW 64     /* screen width */
@@ -43,28 +45,47 @@ static unsigned char *scr[] = {
 	mem + 0xFE0, mem + 0xFE8, mem + 0xFF0, mem + 0xFF8,
 };
 
+void init(void)
+{
+	initscr();
+}
+
+void deinit(void)
+{
+	endwin();
+}
+
 void render(void)
 {
 	int i, x, y, hi, lo;
 
-	fputs("\033c", stdout);
-	for (y = 0; y < SCRH; y += 2) {
+	clear();
+	/*for (y = 0; y < SCRH; y += 2) {
 		for (x = 0; x < SCRW / 8; x++) {
 			for (i = 7; i >= 0; i--) {
 				hi = (scr[y+0][x] >> i) & 0x1;
 				lo = (scr[y+1][x] >> i) & 0x1;
-				fputs(!hi && !lo? " " :
-				      !hi &&  lo? "▄" :
-							 hi && !lo? "▀" : "█", stdout);
+				printw(!hi && !lo? " " :
+				       !hi &&  lo? "▄" :
+							  hi && !lo? "▀" : "█", stdout);
 			}
 		}
-		fputs("\n", stdout);
+		printw("\n");
+	}*/
+	for (y = 0; y < SCRH; y ++) {
+		for (x = 0; x < SCRW / 8; x++) {
+			for (i = 7; i >= 0; i--) {
+				printw((scr[y][x] >> i) & 0x1? "##" : "  ");
+			}
+		}
+		printw("\n");
 	}
+	refresh();
 	for (i = 0; i < 10000000; i++)
 		;
 }
 
-void clear(void)
+void clrscr(void)
 {
 	int x, y;
 
@@ -100,13 +121,14 @@ static void bcd(int x)
 	mem[regi] = x % 10;
 }
 
-static int key()
+static int lastkey()
 {
-	int n = 0;
+	timeout(0);
+	return getch() - '0';
+}
 
-	printf("> ");
-	fflush(stdout);
-	scanf("%x", &n);
-
-	return n;
+static int waitkey()
+{
+	timeout(-1);
+	return getch() - '0';
 }

@@ -7,7 +7,7 @@ struct inst {
 };
 
 struct inst insts[] = {
-	"00E0", "clear(); render();",
+	"00E0", "clrscr(); render();",
 	"00EE", "pc = stack[--sp]; break;",
 	"1NNN", "pc = N; break;",
 	"2NNN", "stack[sp++] = pc; pc = N; break;",
@@ -30,10 +30,10 @@ struct inst insts[] = {
 	"BNNN", "pc = reg[0] + regi; break;",
 	"CXNN", "reg[X] = rand()&0xFF;",
 	"DXYN", "draw(reg[X], reg[Y], N); render();",
-	"EX9E", "if (key() == reg[X]) pc += 2; break; /* read key, unsup */", /* TODO: Implement it */
-	"EXA1", "if (key() != reg[X]) pc += 2; break; /* read key, unsup */", /* TODO: Implement it */
+	"EX9E", "if (lastkey() == reg[X]) pc += 2; break; /* read key, unsup */", /* TODO: Implement it */
+	"EXA1", "if (lastkey() != reg[X]) pc += 2; break; /* read key, unsup */", /* TODO: Implement it */
 	"FX07", "reg[X] = 0; /* read delay, unsup */", /* TODO: Implement it */
-	"FX0A", "reg[X] = key(); /* read key, unsup */", /* TODO: Implement it */
+	"FX0A", "reg[X] = waitkey(); /* read key, unsup */", /* TODO: Implement it */
 	"FX15", "/* set delay timer, unsup */", /* TODO: Implement it */
 	"FX18", "/* set sound timer, unsup */", /* TODO: Implement it */
 	"FX1E", "regi += reg[X];",
@@ -77,7 +77,6 @@ void emit(FILE *f, int addr, char *fmt, int x, int y, int n) {
 		case 'X': fprintf(f, "%d", x); break;
 		case 'Y': fprintf(f, "%d", y); break;
 		case 'N': fprintf(f, "%d", n); break;
-		/*case ';': fprintf(f, ";\n\t\t"); break;*/
 		default: fputc(*p, f); break;
 		}
 	}
@@ -107,11 +106,12 @@ int main(int argc, char *argv[]) {
 
 	fprintf(stdout,
 		"#include <stdlib.h>\n"
-		"#include <stdio.h>\n"
 		"#include \"impl.h\"\n"
 		"\n"
 		"int main() {\n"
 		"	int i = 0;\n"
+		"\n"
+		"	init();\n"
 		"\n"
 		"	for (;;) {\n"
 		"		switch (pc) {\n");
@@ -134,6 +134,7 @@ int main(int argc, char *argv[]) {
 		"		}\n"
 		"	}\n"
 		"stop:\n"
+		" deinit();\n"
 		"	exit(0);\n"
 		"}\n");
 
