@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 struct inst {
-	char *pattern;
+	char *fmt;
 	char *action;
 };
 
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 	fprintf(stdout,
 		"#include <stdlib.h>\n"
 		"#include <stdio.h>\n"
-		"#include \"predef.h\"\n"
+		"#include \"impl.h\"\n"
 		"\n"
 		"int main() {\n"
 		"	int i = 0;\n"
@@ -118,10 +118,10 @@ int main(int argc, char *argv[]) {
 
 
 	while (readopcode(f, &opc) == 2) {
-		for (i = 0; insts[i].pattern; i++) {
-			if (match(opc, insts[i].pattern)) {
+		for (i = 0; insts[i].fmt; i++) {
+			if (match(opc, insts[i].fmt)) {
 				fprintf(stdout, "\t\tcase 0x%04X:\n\t\t\tpc += 2;\n\t\t\t", addr);
-				decode(opc, insts[i].pattern, &x, &y, &n);
+				decode(opc, insts[i].fmt, &x, &y, &n);
 				emit(stdout, addr, insts[i].action, x, y, n);
 				break;
 			}
