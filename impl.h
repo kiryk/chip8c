@@ -45,17 +45,17 @@ static unsigned char *scr[] = {
 	mem + 0xFE0, mem + 0xFE8, mem + 0xFF0, mem + 0xFF8,
 };
 
-void init(void)
+static void init(void)
 {
 	initscr();
 }
 
-void deinit(void)
+static void deinit(void)
 {
 	endwin();
 }
 
-void render(void)
+static void render(void)
 {
 	int i, x, y, hi, lo;
 
@@ -85,7 +85,7 @@ void render(void)
 		;
 }
 
-void clrscr(void)
+static void clrscr(void)
 {
 	int x, y;
 
