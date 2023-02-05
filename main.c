@@ -28,7 +28,7 @@ struct inst insts[] = {
 	{ "9XY0", "if (reg[X] != reg[Y]) pc += 2; break;" },
 	{ "ANNN", "regi = N;" },
 	{ "BNNN", "pc = reg[0] + regi; break;" },
-	{ "CXNN", "reg[X] = rand()&0xFF;" },
+	{ "CXNN", "reg[X] = rand()&N;" },
 	{ "DXYN", "draw(reg[X], reg[Y], N); render();" },
 	{ "EX9E", "if (lastkey() == reg[X]) pc += 2; break; /* read key, unsup */" }, /* TODO: Implement it */
 	{ "EXA1", "if (lastkey() != reg[X]) pc += 2; break; /* read key, unsup */" }, /* TODO: Implement it */
