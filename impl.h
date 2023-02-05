@@ -1,15 +1,20 @@
+#include <time.h>
 #include <curses.h>
 
+#define CLKHZ 60     /* sound and delay timers speed */
 #define MEMSZ 0x1000 /* memory size */
 #define SCRSZ 0x100  /* screen size */
-#define SCRW 64     /* screen width */
-#define SCRH 32     /* screen height */
+#define SCRW 64      /* screen width */
+#define SCRH 32      /* screen height */
 
 /* registers */
 static unsigned short stack[10000];
 static unsigned char reg[128] = {0};
-static unsigned short regi = 0, regs = 0, regd = 0;
+static unsigned short regi = 0, regd = 0;
 static int sp = 0, pc = 0x200;
+static int regk;
+
+static struct timespec regd_timer;
 
 /* memory with predefined fonts */
 static unsigned char mem[MEMSZ] = {
@@ -69,8 +74,7 @@ static void render(void)
 		printw("\n");
 	}
 	refresh();
-	for (i = 0; i < 10000000; i++)
-		;
+	napms(20);
 }
 
 static void clrscr(void)
@@ -134,14 +138,45 @@ static int mapkey(char ch)
 	}
 }
 
-static int lastkey()
+static int lastkey(void)
 {
+	int k;
+
 	timeout(0);
-	return mapkey(getch());
+	k = getch();
+	if (k != ERR)
+		regk = mapkey(k);
+	return regk;
 }
 
-static int waitkey()
+static int waitkey(void)
 {
+	int k;
+
 	timeout(-1);
-	return mapkey(getch());
+	k = getch();
+	if (k != ERR)
+		regk = mapkey(k);
+	return regk;
+}
+
+static void setdelay(int n)
+{
+	clock_gettime(CLOCK_REALTIME, &regd_timer);
+	regd = n;
+}
+
+static int getdelay(void)
+{
+	struct timespec ts;
+	unsigned long time_a, time_b;
+
+	clock_gettime(CLOCK_REALTIME, &ts);
+
+	time_b = ts.tv_sec * 100 + (ts.tv_nsec / 10000000);
+	time_a = regd_timer.tv_sec * 100 + (regd_timer.tv_nsec / 10000000);
+
+	time_a = (time_a - time_b) * CLKHZ / 100;
+
+	return regd >= time_a? regd - time_a : 0;
 }

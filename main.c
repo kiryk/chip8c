@@ -32,10 +32,10 @@ struct inst insts[] = {
 	{ "DXYN", "draw(reg[X], reg[Y], N); render();" },
 	{ "EX9E", "if (lastkey() == reg[X]) pc += 2; break;" },
 	{ "EXA1", "if (lastkey() != reg[X]) pc += 2; break;" },
-	{ "FX07", "reg[X] = 0; /* read delay, unsup */" }, /* TODO: Implement it */
+	{ "FX07", "reg[X] = getdelay();" },
 	{ "FX0A", "reg[X] = waitkey();" },
-	{ "FX15", "/* set delay timer, unsup */" }, /* TODO: Implement it */
-	{ "FX18", "/* set sound timer, unsup */" }, /* TODO: Implement it */
+	{ "FX15", "/* setdelay(X); */" },
+	{ "FX18", "/* set sound timer, unsup */" },
 	{ "FX1E", "regi += reg[X];" },
 	{ "FX29", "regi = reg[X] <= 0xF? reg[X]*5 : 16*5;" },
 	{ "FX33", "bcd(reg[X]);" },
