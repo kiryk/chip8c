@@ -121,14 +121,39 @@ static void bcd(int x)
 	mem[regi] = x % 10;
 }
 
+static int mapkey(char ch)
+{
+	if (ch >= 'a' && ch <= 'z')
+		ch -= ('a' - 'A');
+	switch (ch) {
+		case 'X': return 0x0;
+		case '1': return 0x1;
+		case '2': return 0x2;
+		case '3': return 0x3;
+		case 'Q': return 0x4;
+		case 'W': return 0x5;
+		case 'E': return 0x6;
+		case 'A': return 0x7;
+		case 'S': return 0x8;
+		case 'D': return 0x9;
+		case 'Z': return 0xA;
+		case 'C': return 0xB;
+		case '4': return 0xC;
+		case 'R': return 0xD;
+		case 'F': return 0xE;
+		case 'V': return 0xF;
+		default:  return ch;
+	}
+}
+
 static int lastkey()
 {
 	timeout(0);
-	return getch() - '0';
+	return mapkey(getch());
 }
 
 static int waitkey()
 {
 	timeout(-1);
-	return getch() - '0';
+	return mapkey(getch());
 }
