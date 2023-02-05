@@ -10,10 +10,10 @@ struct inst insts[] = {
 	{ "00E0", "clrscr(); render();" },
 	{ "00EE", "pc = stack[--sp]; break;" },
 	{ "1NNN", "pc = N; break;" },
-	{ "2NNN", "stack[sp++] = pc; pc = N; break;" },
-	{ "3XNN", "if (reg[X] == N) pc += 2; break;" },
-	{ "4XNN", "if (reg[X] != N) pc += 2; break;" },
-	{ "5XY0", "if (reg[X] == reg[Y]) pc += 2; break;" },
+	{ "2NNN", "stack[sp++] = A + 2; pc = N; break;" },
+	{ "3XNN", "if (reg[X] == N) { pc = A + 4; break; }" },
+	{ "4XNN", "if (reg[X] != N) { pc = A + 4; break; }" },
+	{ "5XY0", "if (reg[X] == reg[Y]) { pc = A + 4; break; }" },
 	{ "6XNN", "reg[X] = N;" },
 	{ "7XNN", "reg[X] += N;" },
 	{ "8XY0", "reg[X] = reg[Y];" },
@@ -25,16 +25,16 @@ struct inst insts[] = {
 	{ "8XY6", "reg[15] = reg[Y] & 0x1; reg[X] = reg[Y] >> 1;" },
 	{ "8XY7", "reg[15] = reg[Y] >= reg[X]; reg[X] = reg[Y] - reg[X];" },
 	{ "8XYE", "reg[15] = reg[Y] & 0x80 > 0; reg[X] = reg[Y] << 1;" },
-	{ "9XY0", "if (reg[X] != reg[Y]) pc += 2; break;" },
+	{ "9XY0", "if (reg[X] != reg[Y]) { pc = A + 4; break; }" },
 	{ "ANNN", "regi = N;" },
 	{ "BNNN", "pc = reg[0] + regi; break;" },
 	{ "CXNN", "reg[X] = rand()&N;" },
 	{ "DXYN", "draw(reg[X], reg[Y], N); render();" },
-	{ "EX9E", "if (lastkey() == reg[X]) pc += 2; break;" },
-	{ "EXA1", "if (lastkey() != reg[X]) pc += 2; break;" },
+	{ "EX9E", "if (lastkey() == reg[X]) { pc = A + 4; break; }" },
+	{ "EXA1", "if (lastkey() != reg[X]) { pc = A + 4; break; }" },
 	{ "FX07", "reg[X] = getdelay();" },
 	{ "FX0A", "reg[X] = waitkey();" },
-	{ "FX15", "/* setdelay(X); */" },
+	{ "FX15", "setdelay(X);" },
 	{ "FX18", "/* set sound timer, unsup */" },
 	{ "FX1E", "regi += reg[X];" },
 	{ "FX29", "regi = reg[X] <= 0xF? reg[X]*5 : 16*5;" },
@@ -69,11 +69,12 @@ void decode(int opc, char fmt[4], int *x, int *y, int *n) {
 	}
 }
 
-void emit(FILE *f, int addr, char *fmt, int x, int y, int n) {
+void emit(FILE *f, char *fmt, int addr, int x, int y, int n) {
 	char *p;
 
 	for (p = fmt; *p; p++) {
 		switch (*p) {
+		case 'A': fprintf(f, "%d", addr); break;
 		case 'X': fprintf(f, "%d", x); break;
 		case 'Y': fprintf(f, "%d", y); break;
 		case 'N': fprintf(f, "%d", n); break;
@@ -120,9 +121,9 @@ int main(int argc, char *argv[]) {
 	while (readopcode(f, &opc) == 2) {
 		for (i = 0; insts[i].fmt; i++) {
 			if (match(opc, insts[i].fmt)) {
-				fprintf(stdout, "\t\tcase 0x%04X:\n\t\t\tpc += 2;\n\t\t\t", addr);
+				fprintf(stdout, "\t\tcase 0x%04X: ", addr);
 				decode(opc, insts[i].fmt, &x, &y, &n);
-				emit(stdout, addr, insts[i].action, x, y, n);
+				emit(stdout, insts[i].action, addr, x, y, n);
 				break;
 			}
 		}

@@ -8,7 +8,7 @@
 #define SCRH 32      /* screen height */
 
 /* registers */
-static unsigned short stack[10000];
+static unsigned short stack[32];
 static unsigned char reg[128] = {0};
 static unsigned short regi = 0, regd = 0;
 static int sp = 0, pc = 0x200;
