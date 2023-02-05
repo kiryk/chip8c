@@ -21,6 +21,14 @@ Running the above will produce 3 files:
 2. breakout.ch8.c - translated C
 3. breakout.ch8.bin - runnable binary
 
+CHIP-8 has its own keyboard layout. To interact with the binary, use mapped keys:
+```
+1 2 3 C --mapped as--> 1 2 3 4
+4 5 6 D                Q W E R
+7 8 9 E                A S D F
+A 0 B F                Z X C V
+```
+
 # Details
 What the tool was created for, is to check whether it's feasible to decompile
 machine code into a long switch-case, where the switched value is the program
@@ -31,15 +39,9 @@ instruction set.
 Insides of the resulting switch-case look like the following example:
 ```c
 [...]
-case 0x0268:
-  pc += 2;
-  reg[1] = 31;
-case 0x026A:
-  pc += 2;
-  reg[7] &= reg[1];
-case 0x026C:
-  pc += 2;
-  if (reg[7] != 31) pc += 2; break;
+case 0x0202: reg[1] = 0x001F;
+case 0x0204: reg[7] &= reg[1];
+case 0x0206: if (reg[7] != 0x001F) { pc = 0x0206 + 4; break; }
 [...]
 ```
 
