@@ -29,6 +29,10 @@ CHIP-8 has its own keyboard layout. To interact with the binary, use mapped keys
 A 0 B F                Z X C V
 ```
 
+Some CHIP-8 executables can be found on repos like
+[this one](https://github.com/badlogic/chip8/tree/master/roms). The ones that
+were tested and work well include `pong`, `breakout` and `trip8` demo.
+
 # Details
 What the tool was created for, is to check whether it's feasible to decompile
 machine code into a long switch-case, where the switched value is the program
