@@ -1,5 +1,5 @@
 all:
-	cc -ansi -o chip8tr main.c
+	cc -ansi -Wall -Werror -o chip8tr main.c
 
 clean:
 	rm chip8tr

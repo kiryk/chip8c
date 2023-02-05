@@ -7,42 +7,42 @@ struct inst {
 };
 
 struct inst insts[] = {
-	"00E0", "clrscr(); render();",
-	"00EE", "pc = stack[--sp]; break;",
-	"1NNN", "pc = N; break;",
-	"2NNN", "stack[sp++] = pc; pc = N; break;",
-	"3XNN", "if (reg[X] == N) pc += 2; break;",
-	"4XNN", "if (reg[X] != N) pc += 2; break;",
-	"5XY0", "if (reg[X] == reg[Y]) pc += 2; break;",
-	"6XNN", "reg[X] = N;",
-	"7XNN", "reg[X] += N;",
-	"8XY0", "reg[X] = reg[Y];",
-	"8XY1", "reg[X] |= reg[Y];",
-	"8XY2", "reg[X] &= reg[Y];",
-	"8XY3", "reg[X] ^= reg[Y];",
-	"8XY4", "reg[15] = (int)(reg[X] + reg[Y]) > 0xFF; reg[X] += reg[Y];",
-	"8XY5", "reg[15] = reg[X] < reg[Y]; reg[X] -= reg[Y];",
-	"8XY6", "reg[15] = reg[Y] & 0x1; reg[X] = reg[Y] >> 1;",
-	"8XY7", "reg[15] = reg[Y] < reg[X]; reg[X] = reg[Y] - reg[X];",
-	"8XYE", "reg[15] = reg[Y] & 0x80 > 0; reg[X] = reg[Y] << 1;",
-	"9XY0", "if (reg[X] != reg[Y]) pc += 2; break;",
-	"ANNN", "regi = N;",
-	"BNNN", "pc = reg[0] + regi; break;",
-	"CXNN", "reg[X] = rand()&0xFF;",
-	"DXYN", "draw(reg[X], reg[Y], N); render();",
-	"EX9E", "if (lastkey() == reg[X]) pc += 2; break; /* read key, unsup */", /* TODO: Implement it */
-	"EXA1", "if (lastkey() != reg[X]) pc += 2; break; /* read key, unsup */", /* TODO: Implement it */
-	"FX07", "reg[X] = 0; /* read delay, unsup */", /* TODO: Implement it */
-	"FX0A", "reg[X] = waitkey(); /* read key, unsup */", /* TODO: Implement it */
-	"FX15", "/* set delay timer, unsup */", /* TODO: Implement it */
-	"FX18", "/* set sound timer, unsup */", /* TODO: Implement it */
-	"FX1E", "regi += reg[X];",
-	"FX29", "regi = reg[X] <= 0xF? reg[X]*5 : 16*5;",
-	"FX33", "bcd(reg[X]);",
-	"FX55", "for (i = 0; i <= X; i++) mem[regi+i] = reg[i];",
-	"FX65", "for (i = 0; i <= X; i++) reg[i] = mem[regi+i];",
-	"NNNN", "/* unknown */",
-	NULL,
+	{ "00E0", "clrscr(); render();" },
+	{ "00EE", "pc = stack[--sp]; break;" },
+	{ "1NNN", "pc = N; break;" },
+	{ "2NNN", "stack[sp++] = pc; pc = N; break;" },
+	{ "3XNN", "if (reg[X] == N) pc += 2; break;" },
+	{ "4XNN", "if (reg[X] != N) pc += 2; break;" },
+	{ "5XY0", "if (reg[X] == reg[Y]) pc += 2; break;" },
+	{ "6XNN", "reg[X] = N;" },
+	{ "7XNN", "reg[X] += N;" },
+	{ "8XY0", "reg[X] = reg[Y];" },
+	{ "8XY1", "reg[X] |= reg[Y];" },
+	{ "8XY2", "reg[X] &= reg[Y];" },
+	{ "8XY3", "reg[X] ^= reg[Y];" },
+	{ "8XY4", "reg[15] = (int)(reg[X] + reg[Y]) > 0xFF; reg[X] += reg[Y];" },
+	{ "8XY5", "reg[15] = reg[X] < reg[Y]; reg[X] -= reg[Y];" },
+	{ "8XY6", "reg[15] = reg[Y] & 0x1; reg[X] = reg[Y] >> 1;" },
+	{ "8XY7", "reg[15] = reg[Y] < reg[X]; reg[X] = reg[Y] - reg[X];" },
+	{ "8XYE", "reg[15] = reg[Y] & 0x80 > 0; reg[X] = reg[Y] << 1;" },
+	{ "9XY0", "if (reg[X] != reg[Y]) pc += 2; break;" },
+	{ "ANNN", "regi = N;" },
+	{ "BNNN", "pc = reg[0] + regi; break;" },
+	{ "CXNN", "reg[X] = rand()&0xFF;" },
+	{ "DXYN", "draw(reg[X], reg[Y], N); render();" },
+	{ "EX9E", "if (lastkey() == reg[X]) pc += 2; break; /* read key, unsup */" }, /* TODO: Implement it */
+	{ "EXA1", "if (lastkey() != reg[X]) pc += 2; break; /* read key, unsup */" }, /* TODO: Implement it */
+	{ "FX07", "reg[X] = 0; /* read delay, unsup */" }, /* TODO: Implement it */
+	{ "FX0A", "reg[X] = waitkey(); /* read key, unsup */" }, /* TODO: Implement it */
+	{ "FX15", "/* set delay timer, unsup */" }, /* TODO: Implement it */
+	{ "FX18", "/* set sound timer, unsup */" }, /* TODO: Implement it */
+	{ "FX1E", "regi += reg[X];" },
+	{ "FX29", "regi = reg[X] <= 0xF? reg[X]*5 : 16*5;" },
+	{ "FX33", "bcd(reg[X]);" },
+	{ "FX55", "for (i = 0; i <= X; i++) mem[regi+i] = reg[i];" },
+	{ "FX65", "for (i = 0; i <= X; i++) reg[i] = mem[regi+i];" },
+	{ "NNNN", "/* unknown */" },
+	{ NULL },
 };
 
 int readopcode(FILE *f, int *opc) {
