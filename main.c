@@ -30,10 +30,10 @@ struct inst insts[] = {
 	{ "BNNN", "pc = reg[0] + regi; break;" },
 	{ "CXNN", "reg[X] = rand()&N;" },
 	{ "DXYN", "draw(reg[X], reg[Y], N); render();" },
-	{ "EX9E", "if (lastkey() == reg[X]) pc += 2; break; /* read key, unsup */" }, /* TODO: Implement it */
-	{ "EXA1", "if (lastkey() != reg[X]) pc += 2; break; /* read key, unsup */" }, /* TODO: Implement it */
+	{ "EX9E", "if (lastkey() == reg[X]) pc += 2; break;" },
+	{ "EXA1", "if (lastkey() != reg[X]) pc += 2; break;" },
 	{ "FX07", "reg[X] = 0; /* read delay, unsup */" }, /* TODO: Implement it */
-	{ "FX0A", "reg[X] = waitkey(); /* read key, unsup */" }, /* TODO: Implement it */
+	{ "FX0A", "reg[X] = waitkey();" },
 	{ "FX15", "/* set delay timer, unsup */" }, /* TODO: Implement it */
 	{ "FX18", "/* set sound timer, unsup */" }, /* TODO: Implement it */
 	{ "FX1E", "regi += reg[X];" },

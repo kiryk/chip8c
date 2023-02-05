@@ -60,18 +60,6 @@ static void render(void)
 	int i, x, y, hi, lo;
 
 	clear();
-	/*for (y = 0; y < SCRH; y += 2) {
-		for (x = 0; x < SCRW / 8; x++) {
-			for (i = 7; i >= 0; i--) {
-				hi = (scr[y+0][x] >> i) & 0x1;
-				lo = (scr[y+1][x] >> i) & 0x1;
-				printw(!hi && !lo? " " :
-				       !hi &&  lo? "▄" :
-							  hi && !lo? "▀" : "█", stdout);
-			}
-		}
-		printw("\n");
-	}*/
 	for (y = 0; y < SCRH; y ++) {
 		for (x = 0; x < SCRW / 8; x++) {
 			for (i = 7; i >= 0; i--) {
