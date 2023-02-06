@@ -42,11 +42,21 @@ instruction set.
 
 Insides of the resulting switch-case look like the following example:
 ```c
-[...]
-case 0x0202: reg[1] = 0x001F;
-case 0x0204: reg[7] &= reg[1];
-case 0x0206: if (reg[7] != 0x001F) { pc = 0x0206 + 4; break; }
-[...]
+switch (pc) {
+/* ... */
+case 0x0200: reg[0] = reg[6];
+case 0x0202: reg[1] = 0xFC;
+case 0x0204: reg[0] &= reg[1];
+case 0x0206: regi = 0x30C;
+/* ... */
+case 0x0242: reg[0] = 0xFE;
+case 0x0244: reg[9] ^= reg[0];
+case 0x0246: stack[sp++] = 0x0246 + 2; pc = 0x2A4; break;
+case 0x0248: reg[5] += 0x01;
+case 0x024A: stack[sp++] = 0x024A + 2; pc = 0x2A4; break;
+case 0x024C: if (reg[5] != 0x60) { pc = 0x024C + 4; break; }
+/* ... */
+}
 ```
 
 Worth noting, that breaking out from the switch-case is required only when
