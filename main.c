@@ -75,7 +75,7 @@ void emit(FILE *f, char *fmt, int addr, int x, int y, int n) {
 	for (p = fmt; *p; p++) {
 		switch (*p) {
 		case 'A': fprintf(f, "0x%04X", addr); break;
-		case 'N': fprintf(f, "%d", n); break;
+		case 'N': fprintf(f, "0x%02X", n); break;
 		case 'X': fprintf(f, "%d", x); break;
 		case 'Y': fprintf(f, "%d", y); break;
 		default: fputc(*p, f); break;
